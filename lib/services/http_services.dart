@@ -3,12 +3,13 @@ import 'package:hilaza/utils/constants.dart';
 import 'package:http/http.dart' as http;
 
 class CustomHttp {
-
-  String baseUrl = Consts.emulatorBaseUrl;
+  String baseUrl = Consts.localHostBaseUrl;
 
   Future<dynamic> get(String endpoint) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl$endpoint'));
+      final response = await http
+          .get(Uri.parse('$baseUrl$endpoint'))
+          .timeout(const Duration(seconds: 10)); 
       return _handleResponse(response);
     } catch (e) {
       throw Exception('Error al realizar la petición GET: $e');
@@ -17,11 +18,13 @@ class CustomHttp {
 
   Future<dynamic> post(String endpoint, Map<String, dynamic> body) async {
     try {
-      final response = await http.post(
-        Uri.parse('$baseUrl$endpoint'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(body),
-      );
+      final response = await http
+          .post(
+            Uri.parse('$baseUrl$endpoint'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(body),
+          )
+          .timeout(const Duration(seconds: 10)); 
       return _handleResponse(response);
     } catch (e) {
       throw Exception('Error al realizar la petición POST: $e');
@@ -30,11 +33,13 @@ class CustomHttp {
 
   Future<dynamic> put(String endpoint, Map<String, dynamic> body) async {
     try {
-      final response = await http.put(
-        Uri.parse('$baseUrl$endpoint'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(body),
-      );
+      final response = await http
+          .put(
+            Uri.parse('$baseUrl$endpoint'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(body),
+          )
+          .timeout(const Duration(seconds: 10)); 
       return _handleResponse(response);
     } catch (e) {
       throw Exception('Error al realizar la petición PUT: $e');
@@ -43,7 +48,9 @@ class CustomHttp {
 
   Future<dynamic> delete(String endpoint) async {
     try {
-      final response = await http.delete(Uri.parse('$baseUrl$endpoint'));
+      final response = await http
+          .delete(Uri.parse('$baseUrl$endpoint'))
+          .timeout(const Duration(seconds: 10)); 
       return _handleResponse(response);
     } catch (e) {
       throw Exception('Error al realizar la petición DELETE: $e');

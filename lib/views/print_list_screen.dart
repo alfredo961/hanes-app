@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hilaza/views/home_screen.dart';
+import 'package:hilaza/views/home/home_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodels/home_viewmodel.dart';

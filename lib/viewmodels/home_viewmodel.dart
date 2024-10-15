@@ -13,10 +13,10 @@ class HomeViewModel extends ChangeNotifier {
   final CustomHttp customHttp = CustomHttp();
 
   HomeViewModel() {
-    _initializeData();
+    initializeData();
   }
 
-  Future<void> _initializeData() async {
+  Future<void> initializeData({Function(String)? onError}) async {
     try {
       final data = await customHttp.get('/${Consts.getHilos}');
       myProducts.addAll((data as List).map((item) => Hilo.fromJson(item)).toList());
@@ -26,6 +26,9 @@ class HomeViewModel extends ChangeNotifier {
       }
     } catch (e) {
       debugPrint('Error al cargar los datos: $e');
+      if (onError != null) {
+        onError(e.toString());
+      }
     } finally {
       isLoading = false;
       notifyListeners();
