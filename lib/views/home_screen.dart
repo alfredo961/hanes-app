@@ -11,8 +11,9 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildImage(String? imageUrl) {
     return imageUrl != null && imageUrl.isNotEmpty
-        ? Image.network(imageUrl, width: 80, height: 100, fit: BoxFit.cover)
-        : Image.asset('assets/placeholder.png', width: 80, height: 100, fit: BoxFit.cover);
+        ? Image.network(imageUrl)
+        : Image.asset('assets/placeholder.png',
+            width: 80, height: 100, fit: BoxFit.cover);
   }
 
   Widget _buildHiloDetails(BuildContext context, Hilo hilo) {
@@ -29,21 +30,83 @@ class HomeScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(height: 10),
-            _buildImage(hilo.fotosHilos?.ruta),
-            const SizedBox(height: 10),
-            Text('Código: ${hilo.cod}', style: const TextStyle(fontSize: 18)),
-            Text('Descripción: ${hilo.description}', style: const TextStyle(fontSize: 18)),
-            Text('Vendor: ${hilo.vendor}', style: const TextStyle(fontSize: 18)),
-            Text('Tipo de hilo: ${hilo.yarnType}', style: const TextStyle(fontSize: 18)),
-            _buildImage(hilo.fotosDescripcionesHilos?.ruta),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .02,
-            )
+            const SizedBox(height: 20),
+            _buildDetailImage(hilo.fotosHilos?.ruta),
+            const SizedBox(height: 20),
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDetailRow('Código', hilo.cod),
+                    const SizedBox(height: 10),
+                    _buildDetailRow('Descripción', hilo.description),
+                    const SizedBox(height: 10),
+                    _buildDetailRow('Vendor', hilo.vendor),
+                    const SizedBox(height: 10),
+                    _buildDetailRow('Tipo de hilo', hilo.yarnType),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            _buildDetailImage(hilo.fotosDescripcionesHilos?.ruta),
+            const SizedBox(height: 20),
+            Center(
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).primaryColor,
+          disabledBackgroundColor: Colors.grey,
+        ),
+                  child: const Text('Cerrar detalle', style: TextStyle(color: Colors.white),),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildDetailRow(String label, String? value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              '$label:',
+              style:
+                  const TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value ?? '',
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailImage(String? imageUrl) {
+    return imageUrl != null
+        ? Image.network(
+            imageUrl,
+            fit: BoxFit.contain,
+          )
+        : const SizedBox.shrink();
   }
 
   void showHiloDetails(BuildContext context, Hilo hilo) {
@@ -56,7 +119,8 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProductListTile(BuildContext context, Hilo hilo, HomeViewModel viewModel) {
+  Widget _buildProductListTile(
+      BuildContext context, Hilo hilo, HomeViewModel viewModel) {
     return Card(
       key: ValueKey(hilo.cod),
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
@@ -73,8 +137,9 @@ class HomeScreen extends StatelessWidget {
             const Text('Cantidad de conos:'),
             DropdownButton<int>(
               value: viewModel.selectedQuantities[hilo.cod] ?? 1,
-              items: List.generate(30, (i) => i + 1) // Assuming a max of 30 cones
-                  .map((int value) {
+              items:
+                  List.generate(30, (i) => i + 1) // Assuming a max of 30 cones
+                      .map((int value) {
                 return DropdownMenuItem<int>(
                   value: value,
                   child: Text(value.toString()),
