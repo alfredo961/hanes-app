@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
-
-import '../models/hilo_model.dart';
+import '../models/yarn_model.dart';
+import '../services/http_services.dart';
+import '../utils/constants.dart';
 
 class HomeViewModel extends ChangeNotifier {
-  final List<Hilo> myProducts = List<Hilo>.generate(
-      100,
-      (i) => Hilo(
-            codigo: '02191-000000-LG-$i',
-            descripcion: 'DC SP 260-70/36 BLK TXT POLY $i',
-            cantidadConos: (i % 30) + 1,
-            total: (i % 30) * 4,
-            categoria: 'Polyester',
-            fotoHilo: 'https://hanes-images.s3.amazonaws.com/fotosHilos/19432-000000-LG.jpeg',
-            fotoDescripcion: 'https://hanes-images.s3.amazonaws.com/fotosDescripcionesHilos/19432-000000-LG.jpeg',
-          ));
+  final List<Hilo> myProducts = [];
   List<Hilo> filteredProducts = [];
   List<Hilo> selectedProducts = [];
   String query = '';
   Map<String, int> selectedQuantities = {};
+  bool isLoading = true;
+  final CustomHttp customHttp = CustomHttp();
 
   HomeViewModel() {
-    filteredProducts = myProducts;
-    for (var product in myProducts) {
-      selectedQuantities[product.codigo] = 1;
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    try {
+      final data = await customHttp.get('/${Consts.getHilos}');
+      myProducts.addAll((data as List).map((item) => Hilo.fromJson(item)).toList());
+      filteredProducts = myProducts;
+      for (var product in myProducts) {
+        selectedQuantities[product.cod!] = 1;
+      }
+    } catch (e) {
+      debugPrint('Error al cargar los datos: $e');
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -30,7 +36,7 @@ class HomeViewModel extends ChangeNotifier {
     query = newQuery;
     filteredProducts = myProducts
         .where((product) =>
-            product.descripcion.toLowerCase().contains(query.toLowerCase()))
+            product.description!.toLowerCase().contains(query.toLowerCase()))
         .toList();
     notifyListeners();
   }
@@ -44,13 +50,22 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateQuantity(String codigo, int quantity) {
-    selectedQuantities[codigo] = quantity;
+  void updateQuantity(String cod, int quantity) {
+    selectedQuantities[cod] = quantity;
     notifyListeners();
   }
 
   void clearSelectedProducts() {
     selectedProducts.clear();
+    notifyListeners();
+  }
+
+  void resetValues() {
+    filteredProducts = myProducts;
+    selectedProducts.clear();
+    query = '';
+    selectedQuantities = {for (var product in myProducts) product.cod!: 1};
+    isLoading = false;
     notifyListeners();
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hilaza/views/print_list_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodels/home_viewmodel.dart';
@@ -68,7 +69,7 @@ class SelectedItemsList extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final hilo = viewModel.selectedProducts[index];
                       return Dismissible(
-                        key: ValueKey(hilo.codigo),
+                        key: ValueKey(hilo.cod),
                         direction: DismissDirection.endToStart,
                         onDismissed: (direction) {
                           viewModel.toggleSelection(hilo);
@@ -89,14 +90,23 @@ class SelectedItemsList extends StatelessWidget {
                           child: ListTile(
                             leading: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
-                              child: Image.asset(hilo.fotoHilo,
-                                  width: 50, height: 50, fit: BoxFit.cover),
+                              child: hilo.fotosHilos?.ruta != null && hilo.fotosHilos!.ruta!.isNotEmpty
+                                  ? Image.network(hilo.fotosHilos!.ruta!, width: 50, height: 50, fit: BoxFit.cover)
+                                  : Image.asset('assets/placeholder.png', width: 50, height: 50, fit: BoxFit.cover),
                             ),
                             title: Text(
-                              hilo.descripcion,
+                              hilo.description ?? 'No Description',
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            subtitle: Text('Código: ${hilo.codigo}'),
+                            subtitle: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Flexible(child: Text('Código: ${hilo.cod}')),
+                                Flexible(child: Text('Cantidad de conos seleccionados: ${viewModel.selectedQuantities[hilo.cod]}')),
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -109,8 +119,11 @@ class SelectedItemsList extends StatelessWidget {
           ? null
           : FloatingActionButton(
               onPressed: () {
-                // Acción para continuar
-              },
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const PrintListScreen()),
+          );
+        },
               child: const Icon(CupertinoIcons.arrow_right),
             ),
     );
