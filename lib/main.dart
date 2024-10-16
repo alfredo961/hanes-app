@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hilaza/utils/constants.dart';
 import 'package:hilaza/viewmodels/home_viewmodel.dart';
-import 'package:hilaza/views/home/home_screen.dart';
 import 'package:provider/provider.dart';
+
+import 'utils/app_theme.dart';
+import 'views/teams_screen.dart';
 
 void main() {
   runApp(
@@ -22,11 +25,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Hilaza',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const HomeScreen(),
+      theme: AppTheme.theme,
+      home: const TeamsScreen(),
     );
   }
 }

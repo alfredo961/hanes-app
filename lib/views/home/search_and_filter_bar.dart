@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/home_viewmodel.dart';
 
-
 class SearchAndFilterBar extends StatefulWidget {
   const SearchAndFilterBar({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _SearchAndFilterBarState createState() => _SearchAndFilterBarState();
 }
 
@@ -53,7 +51,7 @@ class _SearchAndFilterBarState extends State<SearchAndFilterBar> {
                     hintStyle: const TextStyle(color: Colors.white54),
                     prefixIconColor: Colors.white,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
+                      borderRadius: BorderRadius.circular(8.0),
                       borderSide: BorderSide.none,
                     ),
                     filled: true,
@@ -100,10 +98,20 @@ class _SearchAndFilterBarState extends State<SearchAndFilterBar> {
                   children: [
                     ElevatedButton(
                       onPressed: () => _applyFilter(viewModel),
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
                       child: const Text('Aplicar filtro'),
                     ),
                     TextButton(
                       onPressed: () => _clearFilter(viewModel),
+                      style: TextButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
                       child: const Text('Limpiar filtros'),
                     ),
                   ],
@@ -124,6 +132,9 @@ class _SearchAndFilterBarState extends State<SearchAndFilterBar> {
           _selectedCategory = selected ? category : '';
         });
       },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
     );
   }
 }

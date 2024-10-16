@@ -58,6 +58,8 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
+          SizedBox(height: MediaQuery.of(context).size.height * .02,),
+          Text('Teams: ${viewModel.selectedTeamName}'),
           const SearchAndFilterBar(),
           Expanded(
             child: viewModel.isLoading

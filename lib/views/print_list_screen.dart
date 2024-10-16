@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hilaza/views/home/home_screen.dart';
+import 'package:hilaza/views/widgets/elevated_button.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodels/home_viewmodel.dart';
@@ -47,9 +48,9 @@ class PrintListScreen extends StatelessWidget {
           Flexible(
             child: SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
+              child: MainButton(
                 onPressed: () {},
-                child: const Text('Mandar a imprimir'),
+                text: 'Mandar a imprimir',
               ),
             ),
           ),

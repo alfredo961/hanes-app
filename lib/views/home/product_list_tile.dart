@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hilaza/utils/constants.dart';
 
 import '../../models/yarn_model.dart';
 import '../../viewmodels/home_viewmodel.dart';
@@ -26,27 +27,26 @@ class ProductListTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           child: _buildImage(hilo.fotosHilos?.ruta),
         ),
-        title: Text(hilo.description ?? 'No Description'),
+        title: Text(hilo.description ?? 'No Description',
+        style: const TextStyle(
+          color: Consts.morado,
+          fontWeight: FontWeight.bold
+        ),),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Código: ${hilo.cod}'),
             const Text('Cantidad de conos:'),
-            DropdownButton<int>(
-              value: viewModel.selectedQuantities[hilo.cod] ?? 1,
-              items: List.generate(30, (i) => i + 1).map((int value) {
-                return DropdownMenuItem<int>(
-                  value: value,
-                  child: Text(value.toString()),
-                );
-              }).toList(),
-              onChanged: (int? newValue) {
-                if (newValue != null) {
-                  viewModel.updateQuantity(hilo.cod!, newValue);
-                }
-              },
-            ),
-          ],
+            ConosDropdownn(
+                      selectedValue: viewModel.selectedQuantities[hilo.cod] ?? 1,
+                      onChanged: (int? newValue) {
+                        if (newValue != null) {
+                          viewModel.updateQuantity(hilo.cod!, newValue);
+                        }
+                      },
+                      items: List.generate(30, (i) => i + 1),
+                    ),
+                  ],
         ),
         trailing: Checkbox(
           value: viewModel.selectedProducts.contains(hilo),
@@ -63,5 +63,51 @@ class ProductListTile extends StatelessWidget {
     return imageUrl != null && imageUrl.isNotEmpty
         ? Image.network(imageUrl)
         : Image.asset('assets/placeholder.png', width: 80, height: 100, fit: BoxFit.cover);
+  }
+}
+
+class ConosDropdownn extends StatelessWidget {
+  final int selectedValue;
+  final ValueChanged<int?> onChanged;
+  final List<int> items;
+
+  const ConosDropdownn({super.key, 
+    required this.selectedValue,
+    required this.onChanged,
+    required this.items,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * .25,
+      child: DropdownButtonFormField<int>(
+        value: selectedValue,
+        items: items.map((int value) {
+          return DropdownMenuItem<int>(
+            value: value,
+            child: Text(value.toString()),
+          );
+        }).toList(),
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Theme.of(context).primaryColor),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+          ),
+        ),
+        dropdownColor: Colors.white,
+        icon: Icon(Icons.arrow_drop_down, color: Theme.of(context).primaryColor),
+        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      ),
+    );
   }
 }

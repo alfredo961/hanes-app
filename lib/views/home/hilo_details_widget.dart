@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hilaza/views/widgets/elevated_button.dart';
 
 import '../../models/yarn_model.dart';
+import '../widgets/bottom_navigation_space.dart';
 
 class HiloDetailsWidget extends StatelessWidget {
   final Hilo hilo;
@@ -55,19 +57,15 @@ class HiloDetailsWidget extends StatelessWidget {
             Center(
               child: SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
+                child: MainButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    disabledBackgroundColor: Colors.grey,
-                  ),
-                  child: const Text('Cerrar detalle',
-                      style: TextStyle(color: Colors.white)),
+                  text: 'Cerrar detalle',
                 ),
               ),
             ),
+            const BottomNavigationSpace(),
           ],
         ),
       ),
@@ -85,10 +83,10 @@ class HiloDetailsWidget extends StatelessWidget {
             const SizedBox(width: 10),
             Text(
               '$label:',
-              style:const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.normal,
-                  ),
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.normal,
+              ),
             ),
           ],
         ),
@@ -96,19 +94,22 @@ class HiloDetailsWidget extends StatelessWidget {
         Text(
           value ?? '',
           style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,),
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ],
     );
   }
 
   Widget _buildDetailImage(String? imageUrl) {
-    return imageUrl != null
-        ? Image.network(
-            imageUrl,
-            fit: BoxFit.contain,
-          )
-        : const SizedBox.shrink();
+    if (imageUrl != null && imageUrl.isNotEmpty) {
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.contain,
+      );
+    } else {
+      return Image.asset('assets/placeholder.png');
+    }
   }
 }

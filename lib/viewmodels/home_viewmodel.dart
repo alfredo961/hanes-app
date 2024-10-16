@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../models/team_model.dart';
 import '../models/yarn_model.dart';
+import '../services/apis/team_api.dart';
 import '../services/http_services.dart';
 import '../utils/constants.dart';
 
@@ -11,6 +13,15 @@ class HomeViewModel extends ChangeNotifier {
   Map<String, int> selectedQuantities = {};
   bool isLoading = true;
   final CustomHttp customHttp = CustomHttp();
+
+  List<Team> _teams = [];
+  bool _isLoadingTeams = false;
+  final TeamService _teamService = TeamService();
+  String? _selectedTeamName;
+
+  List<Team> get teams => _teams;
+  bool get isLoadingTeams => _isLoadingTeams;
+  String? get selectedTeamName => _selectedTeamName;
 
   HomeViewModel() {
     initializeData();
@@ -33,6 +44,7 @@ class HomeViewModel extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
     }
+    fetchTeams();
   }
 
   void updateSearchQuery(String newQuery) {
@@ -69,6 +81,25 @@ class HomeViewModel extends ChangeNotifier {
     query = '';
     selectedQuantities = {for (var product in myProducts) product.cod!: 1};
     isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchTeams() async {
+    _isLoadingTeams = true;
+    notifyListeners();
+
+    try {
+      _teams = await _teamService.fetchTeams();
+    } catch (e) {
+      print('Error al obtener los equipos: $e');
+    } finally {
+      _isLoadingTeams = false;
+      notifyListeners();
+    }
+  }
+
+  void selectTeam(String teamName) {
+    _selectedTeamName = teamName;
     notifyListeners();
   }
 }
