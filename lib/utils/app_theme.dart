@@ -6,7 +6,7 @@ class AppTheme {
   static ThemeData get theme {
     return ThemeData(
       primaryColor: Consts.rojo,
-      scaffoldBackgroundColor: Consts.blanco,
+      scaffoldBackgroundColor: Consts.backgroundWhite,
       colorScheme: const ColorScheme(
         primary: Consts.rojo,
         primaryContainer: Consts.rojoSecundario,

@@ -91,7 +91,7 @@ class HomeViewModel extends ChangeNotifier {
     try {
       _teams = await _teamService.fetchTeams();
     } catch (e) {
-      print('Error al obtener los equipos: $e');
+      debugPrint('Error al obtener los equipos: $e');
     } finally {
       _isLoadingTeams = false;
       notifyListeners();

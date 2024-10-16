@@ -16,4 +16,5 @@ class Consts{
   static const Color morado = Color(0xFF741773);
   static const Color moradoSecundario = Color(0xFFaf77ad);
   static const Color blanco = Color(0xFFffffff);
+  static const Color backgroundWhite = Color(0xFFf7f7f7);
 }

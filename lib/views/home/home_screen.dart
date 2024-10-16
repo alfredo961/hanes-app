@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hilaza/utils/constants.dart';
 import 'package:hilaza/views/selected_list.dart';
 import 'package:provider/provider.dart';
 
@@ -13,14 +14,30 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   void showHiloDetails(BuildContext context, Hilo hilo) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-      ),
-      builder: (context) => HiloDetailsWidget(hilo: hilo),
-    );
-  }
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+    ),
+    builder: (context) => DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.9,
+      minChildSize: 0.9,
+      maxChildSize: 0.9,
+      builder: (context, scrollController) {
+        return SingleChildScrollView(
+          controller: scrollController,
+          child: Container(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: HiloDetailsWidget(hilo: hilo),
+          ),
+        );
+      },
+    ),
+  );
+}
+
 
   void _showErrorDialog(BuildContext context, String message, HomeViewModel viewModel) {
     showDialog(
@@ -48,11 +65,12 @@ class HomeScreen extends StatelessWidget {
     final viewModel = Provider.of<HomeViewModel>(context);
 
     return Scaffold(
+      backgroundColor: Consts.backgroundWhite,
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
         title: const Text(
-          'Inicio',
+          'Lista de hilos',
           style: TextStyle(color: Colors.white),
         ),
       ),

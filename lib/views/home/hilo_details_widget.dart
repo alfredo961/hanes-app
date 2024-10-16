@@ -18,6 +18,7 @@ class HiloDetailsWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(height: MediaQuery.of(context).size.height * .01,),
             const Center(
               child: Text(
                 'Detalles del Hilo',
