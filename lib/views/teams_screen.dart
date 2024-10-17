@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hilaza/views/widgets/bottom_navigation_space.dart';
 import 'package:provider/provider.dart';
+import '../utils/is_tablet.dart';
 import '../viewmodels/home_viewmodel.dart';
 import 'home/home_screen.dart';
 
@@ -61,8 +62,8 @@ class _TeamsScreenState extends State<TeamsScreen> {
                     }
 
                     return GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 5,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: isTablet(context) ? 6 : 5,
                         crossAxisSpacing: 4.0,
                         mainAxisSpacing: 4.0,
                       ),

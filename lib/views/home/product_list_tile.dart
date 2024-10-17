@@ -25,7 +25,9 @@ class ProductListTile extends StatelessWidget {
       child: ListTile(
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: _buildImage(hilo.fotosHilos?.ruta),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * .15,
+            child: _buildImage(hilo.fotosHilos?.ruta)),
         ),
         title: Text(hilo.description ?? 'No Description',
         style: const TextStyle(
