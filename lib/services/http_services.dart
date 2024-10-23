@@ -9,7 +9,7 @@ class CustomHttp {
     try {
       final response = await http
           .get(Uri.parse('$baseUrl$endpoint'))
-          .timeout(const Duration(seconds: 10)); 
+          .timeout(const Duration(seconds: Consts.timeoutSeconds));
       return _handleResponse(response);
     } catch (e) {
       throw Exception('Error al realizar la petición GET: $e');
@@ -24,7 +24,7 @@ class CustomHttp {
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode(body),
           )
-          .timeout(const Duration(seconds: 10)); 
+          .timeout(const Duration(seconds: Consts.timeoutSeconds)); 
       return _handleResponse(response);
     } catch (e) {
       throw Exception('Error al realizar la petición POST: $e');
@@ -39,7 +39,7 @@ class CustomHttp {
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode(body),
           )
-          .timeout(const Duration(seconds: 10)); 
+          .timeout(const Duration(seconds: Consts.timeoutSeconds));
       return _handleResponse(response);
     } catch (e) {
       throw Exception('Error al realizar la petición PUT: $e');
@@ -50,7 +50,7 @@ class CustomHttp {
     try {
       final response = await http
           .delete(Uri.parse('$baseUrl$endpoint'))
-          .timeout(const Duration(seconds: 10)); 
+          .timeout(const Duration(seconds: Consts.timeoutSeconds));
       return _handleResponse(response);
     } catch (e) {
       throw Exception('Error al realizar la petición DELETE: $e');

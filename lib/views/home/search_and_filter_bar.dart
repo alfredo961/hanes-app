@@ -23,7 +23,7 @@ class _SearchAndFilterBarState extends State<SearchAndFilterBar> {
   }
 
   void _applyFilter(HomeViewModel viewModel) {
-    viewModel.updateSearchQuery(_selectedCategory);
+    viewModel.fetchCategories(_selectedCategory);
     _toggleFilterVisibility();
   }
 
@@ -31,7 +31,7 @@ class _SearchAndFilterBarState extends State<SearchAndFilterBar> {
     setState(() {
       _selectedCategory = '';
     });
-    viewModel.updateSearchQuery('');
+    viewModel.resetValues();
   }
 
   @override
@@ -105,8 +105,7 @@ class _SearchAndFilterBarState extends State<SearchAndFilterBar> {
                       children: [
                         MainButton(
                           onPressed: () => _applyFilter(viewModel),
-                          
-                          text:'Aplicar filtro',
+                          text: 'Aplicar filtro',
                         ),
                         TextButton(
                           onPressed: () => _clearFilter(viewModel),
@@ -121,6 +120,16 @@ class _SearchAndFilterBarState extends State<SearchAndFilterBar> {
                     ),
                   ],
                 ),
+              ),
+            ),
+          ),
+        if (viewModel.noResultsFound)
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Center(
+              child: Text(
+                'No se encontraron resultados',
+                style: TextStyle(fontSize: 18, color: Colors.grey),
               ),
             ),
           ),

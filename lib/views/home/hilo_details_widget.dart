@@ -38,7 +38,7 @@ class HiloDetailsWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildDetailRow(Icons.code, 'Código', hilo.cod, context),
+                    _buildDetailRow(Icons.code, 'Código', hilo.item, context),
                     const SizedBox(height: 10),
                     _buildDetailRow(Icons.description, 'Descripción',
                         hilo.description, context),

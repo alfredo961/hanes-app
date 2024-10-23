@@ -38,28 +38,6 @@ class HomeScreen extends StatelessWidget {
   );
 }
 
-
-  void _showErrorDialog(BuildContext context, String message, HomeViewModel viewModel) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                viewModel.initializeData(onError: (msg) => _showErrorDialog(context, msg, viewModel));
-              },
-              child: const Text('Reintentar'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<HomeViewModel>(context);

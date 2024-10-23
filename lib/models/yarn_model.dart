@@ -1,3 +1,6 @@
+import 'fotos_hilos.dart';
+import 'search_by_category_model.dart';
+
 class Hilo {
   int? id;
   String? cod;
@@ -8,29 +11,32 @@ class Hilo {
   FotosHilos? fotosHilos;
   FotosHilos? fotosDescripcionesHilos;
 
-  Hilo(
-      {this.id,
-      this.cod,
-      this.item,
-      this.description,
-      this.vendor,
-      this.yarnType,
-      this.fotosHilos,
-      this.fotosDescripcionesHilos});
+  Hilo({
+    this.id,
+    this.cod,
+    this.item,
+    this.description,
+    this.vendor,
+    this.yarnType,
+    this.fotosHilos,
+    this.fotosDescripcionesHilos,
+  });
 
-  Hilo.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    cod = json['cod'];
-    item = json['item'];
-    description = json['description'];
-    vendor = json['vendor'];
-    yarnType = json['yarn_type'];
-    fotosHilos = json['fotosHilos'] != null
-        ? FotosHilos.fromJson(json['fotosHilos'])
-        : null;
-    fotosDescripcionesHilos = json['fotosDescripcionesHilos'] != null
-        ? FotosHilos.fromJson(json['fotosDescripcionesHilos'])
-        : null;
+  factory Hilo.fromJson(Map<String, dynamic> json) {
+    return Hilo(
+      id: json['id'],
+      cod: json['cod'],
+      item: json['item'],
+      description: json['description'],
+      vendor: json['vendor'],
+      yarnType: json['yarn_type'],
+      fotosHilos: json['fotosHilos'] != null
+          ? FotosHilos.fromJson(json['fotosHilos'])
+          : null,
+      fotosDescripcionesHilos: json['fotosDescripcionesHilos'] != null
+          ? FotosHilos.fromJson(json['fotosDescripcionesHilos'])
+          : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -49,23 +55,17 @@ class Hilo {
     }
     return data;
   }
-}
 
-class FotosHilos {
-  String? nombre;
-  String? ruta;
-
-  FotosHilos({this.nombre, this.ruta});
-
-  FotosHilos.fromJson(Map<String, dynamic> json) {
-    nombre = json['nombre'];
-    ruta = json['ruta'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['nombre'] = nombre;
-    data['ruta'] = ruta;
-    return data;
+  factory Hilo.fromCategoryResult(CategoryResult categoryResult) {
+    return Hilo(
+      id: categoryResult.id,
+      cod: categoryResult.cod,
+      item: categoryResult.item,
+      description: categoryResult.description,
+      vendor: categoryResult.vendor,
+      yarnType: categoryResult.yarnType,
+      fotosHilos: categoryResult.fotosHilos,
+      fotosDescripcionesHilos: categoryResult.fotosDescripcionesHilos,
+    );
   }
 }

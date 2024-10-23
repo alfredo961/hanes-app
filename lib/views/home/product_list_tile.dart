@@ -37,7 +37,7 @@ class ProductListTile extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Código: ${hilo.cod}'),
+            Text('Código: ${hilo.item}'),
             const Text('Cantidad de conos:'),
             ConosDropdownn(
                       selectedValue: viewModel.selectedQuantities[hilo.cod] ?? 1,

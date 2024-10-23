@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hilaza/views/print_list_screen.dart';
+import 'package:hilaza/views/print/print_list_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodels/home_viewmodel.dart';
@@ -103,7 +103,7 @@ class SelectedItemsList extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Flexible(child: Text('Código: ${hilo.cod}')),
+                                Flexible(child: Text('Código: ${hilo.item}')),
                                 Flexible(child: Text('Cantidad de conos seleccionados: ${viewModel.selectedQuantities[hilo.cod]}')),
                               ],
                             ),

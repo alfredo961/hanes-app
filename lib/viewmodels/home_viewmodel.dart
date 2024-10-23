@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hilaza/services/apis/yarn_api.dart';
 import '../models/team_model.dart';
 import '../models/yarn_model.dart';
+import '../services/apis/search_by_category_api.dart';
 import '../services/apis/team_api.dart';
-import '../services/http_services.dart';
-import '../utils/constants.dart';
-
 class HomeViewModel extends ChangeNotifier {
   final List<Hilo> myProducts = [];
   List<Hilo> filteredProducts = [];
@@ -12,12 +11,14 @@ class HomeViewModel extends ChangeNotifier {
   String query = '';
   Map<String, int> selectedQuantities = {};
   bool isLoading = true;
-  final CustomHttp customHttp = CustomHttp();
+  final YarnApi yarnApi = YarnApi();
+  final TeamService teamService = TeamService();
+  final SearchByCategoryApi searchByCategoryApi = SearchByCategoryApi();
 
   List<Team> _teams = [];
   bool _isLoadingTeams = false;
-  final TeamService _teamService = TeamService();
   String? _selectedTeamName;
+  bool noResultsFound = false;
 
   List<Team> get teams => _teams;
   bool get isLoadingTeams => _isLoadingTeams;
@@ -29,8 +30,8 @@ class HomeViewModel extends ChangeNotifier {
 
   Future<void> initializeData({Function(String)? onError}) async {
     try {
-      final data = await customHttp.get('/${Consts.getHilos}');
-      myProducts.addAll((data as List).map((item) => Hilo.fromJson(item)).toList());
+      final yarns = await yarnApi.fetchYarns();
+      myProducts.addAll(yarns);
       filteredProducts = myProducts;
       for (var product in myProducts) {
         selectedQuantities[product.cod!] = 1;
@@ -47,12 +48,28 @@ class HomeViewModel extends ChangeNotifier {
     fetchTeams();
   }
 
+  Future<void> fetchCategories(String category) async {
+    try {
+      final categories = await searchByCategoryApi.fetchCategories(category);
+      filteredProducts = categories
+          .map((categoryResult) => Hilo.fromCategoryResult(categoryResult))
+          .toList();
+      noResultsFound = filteredProducts.isEmpty;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error al obtener las categorías: $e');
+      noResultsFound = true;
+      notifyListeners();
+    }
+  }
+
   void updateSearchQuery(String newQuery) {
     query = newQuery;
     filteredProducts = myProducts
         .where((product) =>
             product.description!.toLowerCase().contains(query.toLowerCase()))
         .toList();
+    noResultsFound = filteredProducts.isEmpty;
     notifyListeners();
   }
 
@@ -81,6 +98,7 @@ class HomeViewModel extends ChangeNotifier {
     query = '';
     selectedQuantities = {for (var product in myProducts) product.cod!: 1};
     isLoading = false;
+    noResultsFound = false;
     notifyListeners();
   }
 
@@ -89,7 +107,7 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _teams = await _teamService.fetchTeams();
+      _teams = await teamService.fetchTeams();
     } catch (e) {
       debugPrint('Error al obtener los equipos: $e');
     } finally {
