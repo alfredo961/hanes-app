@@ -7,6 +7,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import '../../viewmodels/home_viewmodel.dart';
+import '../confirmation_screen.dart';
 import '../home/home_screen.dart';
 import '../widgets/elevated_button.dart';
 import 'package:path_provider/path_provider.dart';
@@ -55,8 +56,13 @@ class _PrintListScreenState extends State<PrintListScreen> {
         // Regenerar el PDF con el número de orden
         final updatedPdf = await generatePdf(context, orderNumber);
         await File(newFilePath).writeAsBytes(await updatedPdf.save());
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Impresión enviada correctamente. Número de Orden: $orderNumber')),
+
+        // Navegar a la pantalla de confirmación
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ConfirmationScreen(orderNumber: orderNumber),
+          ),
         );
       } else {
         throw Exception('No se pudo guardar el archivo PDF');
