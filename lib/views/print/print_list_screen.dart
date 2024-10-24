@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +13,6 @@ import 'package:path_provider/path_provider.dart';
 
 class PrintListScreen extends StatefulWidget {
   const PrintListScreen({super.key});
-
   @override
   _PrintListScreenState createState() => _PrintListScreenState();
 }
@@ -37,7 +35,6 @@ class _PrintListScreenState extends State<PrintListScreen> {
     setState(() {
       _isLoading = true;
     });
-
     try {
       final pdf = await pdfFuture;
       final bytes = await pdf.save();
@@ -46,22 +43,24 @@ class _PrintListScreenState extends State<PrintListScreen> {
       final file = File(filePath);
       await file.writeAsBytes(bytes);
 
-      final orderNumber = await Provider.of<HomeViewModel>(context, listen: false).sendPrintRequest(filePath);
+      print('Ruta del archivo PDF: $filePath'); // Imprimir la ruta del archivo
 
-      // Obtener el nombre del equipo seleccionado
-      final teamName = Provider.of<HomeViewModel>(context, listen: false).selectedTeamName ?? 'equipo';
-
-      // Generar el nombre del archivo PDF
-      final newFileName = 'imprimir_orden_${orderNumber}_$teamName.pdf';
-      final newFilePath = '${directory.path}/$newFileName';
-
-      // Regenerar el PDF con el número de orden
-      final updatedPdf = await generatePdf(context, orderNumber);
-      await File(newFilePath).writeAsBytes(await updatedPdf.save());
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Impresión enviada correctamente. Número de Orden: $orderNumber')),
-      );
+      if (await file.exists()) {
+        final orderNumber = await Provider.of<HomeViewModel>(context, listen: false).sendPrintRequest(filePath);
+        // Obtener el nombre del equipo seleccionado
+        final teamName = Provider.of<HomeViewModel>(context, listen: false).selectedTeamName ?? 'equipo';
+        // Generar el nombre del archivo PDF
+        final newFileName = 'imprimir_orden_${orderNumber}_$teamName.pdf';
+        final newFilePath = '${directory.path}/$newFileName';
+        // Regenerar el PDF con el número de orden
+        final updatedPdf = await generatePdf(context, orderNumber);
+        await File(newFilePath).writeAsBytes(await updatedPdf.save());
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Impresión enviada correctamente. Número de Orden: $orderNumber')),
+        );
+      } else {
+        throw Exception('No se pudo guardar el archivo PDF');
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al enviar la impresión: $e')),
@@ -97,73 +96,71 @@ class _PrintListScreenState extends State<PrintListScreen> {
 
   Widget _buildBody(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * .04),
+      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * .04),
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: (_isLoading)
-          ? const Center(
-              child: CircularProgressIndicator.adaptive(),
-            )
+          ? const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircularProgressIndicator.adaptive(),
+          Text('Imprimiendo...', textAlign: TextAlign.center),
+        ],
+      )
           : FutureBuilder<pw.Document>(
-              future: pdfFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator.adaptive(),
-                  Text('Generando PDF...', textAlign: TextAlign.center,),
-                ],
-              );
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error al generar el PDF: ${snapshot.error}'));
-                } else {
-                  final pdf = snapshot.data!;
-                  return Column(
-                    children: [
-                      SizedBox(height: MediaQuery.of(context).size.height * .02),
-                      Expanded(
-                        flex: 6,
-                        child: PdfPreview(
-                          build: (format) => pdf.save(),
-                        ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * .02),
-                      Flexible(
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: MainButton(
-                            onPressed: _sendPrintRequest,
-                            text: 'Mandar a imprimir',
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .01,
-                      ),
-                      Flexible(
-                        child: TextButton(
-                          onPressed: () {
-                            // Reset values in HomeViewModel
-                            Provider.of<HomeViewModel>(context, listen: false)
-                                .resetValues();
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomeScreen()),
-                              (Route<dynamic> route) => false,
-                            );
-                          },
-                          child: const Text('Regresar a pantalla principal'),
-                        ),
-                      ),
-                    ],
-                  );
-                }
-              },
-            ),
+        future: pdfFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircularProgressIndicator.adaptive(),
+                Text('Generando PDF...', textAlign: TextAlign.center),
+              ],
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error al generar el PDF: ${snapshot.error}'));
+          } else {
+            final pdf = snapshot.data!;
+            return Column(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * .02),
+                Expanded(
+                  flex: 6,
+                  child: PdfPreview(build: (format) => pdf.save()),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * .02),
+                Flexible(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: MainButton(
+                      onPressed: _sendPrintRequest,
+                      text: 'Mandar a imprimir',
+                    ),
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * .01),
+                Flexible(
+                  child: TextButton(
+                    onPressed: () {
+                      // Reset values in HomeViewModel
+                      Provider.of<HomeViewModel>(context, listen: false).resetValues();
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => const HomeScreen()),
+                            (Route<dynamic> route) => false,
+                      );
+                    },
+                    child: const Text('Regresar a pantalla principal'),
+                  ),
+                ),
+              ],
+            );
+          }
+        },
+      ),
     );
   }
 }
@@ -171,10 +168,8 @@ class _PrintListScreenState extends State<PrintListScreen> {
 Future<pw.Document> generatePdf(BuildContext context, int orderNumber) async {
   final viewModel = Provider.of<HomeViewModel>(context, listen: false);
   final pdf = pw.Document();
-
   // Construir la tabla completa con todos los elementos
   final List<List<dynamic>> data = [];
-
   for (var hilo in viewModel.selectedProducts) {
     final image1 = (hilo.fotosHilos?.ruta != null && hilo.fotosHilos!.ruta!.isNotEmpty)
         ? await networkImage(hilo.fotosHilos!.ruta!)
@@ -182,7 +177,6 @@ Future<pw.Document> generatePdf(BuildContext context, int orderNumber) async {
     final image2 = (hilo.fotosDescripcionesHilos?.ruta != null && hilo.fotosDescripcionesHilos!.ruta!.isNotEmpty)
         ? await networkImage(hilo.fotosDescripcionesHilos!.ruta!)
         : null;
-
     data.add([
       viewModel.selectedTeamName ?? '',
       hilo.description ?? '',
@@ -192,7 +186,6 @@ Future<pw.Document> generatePdf(BuildContext context, int orderNumber) async {
       image2 != null ? pw.Image(pw.MemoryImage(image2), height: 50, width: 50) : 'No Image',
     ]);
   }
-
   pdf.addPage(
     pw.Page(
       build: (pw.Context context) {
@@ -220,7 +213,6 @@ Future<pw.Document> generatePdf(BuildContext context, int orderNumber) async {
       },
     ),
   );
-
   return pdf;
 }
 

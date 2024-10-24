@@ -8,6 +8,7 @@
 .pub/
 build/
 ios/Flutter/.last_build_id
+.idea/
 
 # Obfuscation related
 app.*.symbols
@@ -195,3 +196,5 @@ app.*.map.json
 **/ios/Flutter/Flutter.podspec
 **/ios/Flutter/Flutter.xcframework
 **/ios/Flutter/Flutter.podspec
+.idea/caches/deviceStreaming.xml
+.idea/vcs.xml
