@@ -29,7 +29,8 @@ class _PrintListScreenState extends State<PrintListScreen> {
   }
 
   Future<pw.Document> _generatePdf() async {
-    return await generatePdf(context, 1);
+    final orderNumber = await Provider.of<HomeViewModel>(context, listen: false).printService.getOrderNumber();
+    return await generatePdf(context, orderNumber);
   }
 
   Future<void> _sendPrintRequest() async {
@@ -58,11 +59,12 @@ class _PrintListScreenState extends State<PrintListScreen> {
         await File(newFilePath).writeAsBytes(await updatedPdf.save());
 
         // Navegar a la pantalla de confirmación
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => ConfirmationScreen(orderNumber: orderNumber),
           ),
+              (Route<dynamic> route) => false,
         );
       } else {
         throw Exception('No se pudo guardar el archivo PDF');
@@ -159,7 +161,7 @@ class _PrintListScreenState extends State<PrintListScreen> {
                             (Route<dynamic> route) => false,
                       );
                     },
-                    child: const Text('Regresar a pantalla principal'),
+                    child: const Text('Regresar a Lista de Hilos'),
                   ),
                 ),
               ],

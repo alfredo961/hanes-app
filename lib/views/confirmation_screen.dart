@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hilaza/views/home/home_screen.dart';
+import 'package:hilaza/views/teams_screen.dart';
+import 'package:hilaza/views/widgets/elevated_button.dart';
+import 'package:provider/provider.dart';
+
+import '../viewmodels/home_viewmodel.dart';
 
 class ConfirmationScreen extends StatelessWidget {
   final int orderNumber;
@@ -8,9 +12,12 @@ class ConfirmationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<HomeViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Orden Completada'),
+        centerTitle: true,
       ),
       body: Center(
         child: Column(
@@ -27,16 +34,23 @@ class ConfirmationScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 16),
               textAlign: TextAlign.center,
             ),
+            Text(
+              'Teams: ${viewModel.selectedTeamName}',
+              style: const TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 40),
-            ElevatedButton(
+            MainButton(
               onPressed: () {
+                viewModel.clearSelectedProducts();
+                viewModel.clearTeamSelection();
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  MaterialPageRoute(builder: (context) => const TeamsScreen()),
                   (Route<dynamic> route) => false,
                 );
               },
-              child: const Text('Crear una nueva orden'),
+              text: 'Crear una nueva orden',
             ),
           ],
         ),

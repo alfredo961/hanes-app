@@ -126,6 +126,13 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearTeamSelection() {
+    _selectedTeamName = null;
+    _selectedTeamId = null;
+    notifyListeners();
+  }
+
+
   Future<int> sendPrintRequest(String filePath) async {
     if (_selectedTeamId == null) {
       throw Exception('No se ha seleccionado ningún equipo');
