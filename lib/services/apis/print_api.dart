@@ -1,3 +1,5 @@
+import 'package:hilaza/utils/constants.dart';
+
 import '../http_services.dart';
 import 'dart:io';
 
@@ -6,7 +8,7 @@ class PrintService {
 
   Future<int> getOrderNumber() async {
     try {
-      final response = await _httpHelper.get('/getOrderNumber');
+      final response = await _httpHelper.get(Consts.getOrderNumber);
       return response['orderNumber'];
     } catch (e) {
       throw Exception('Error al obtener el número de orden: $e');
@@ -17,7 +19,7 @@ class PrintService {
     try {
       final file = File(filePath);
       final response = await _httpHelper.postMultipart(
-        '/printOrder',
+        Consts.printOrder,
         {'teamId': teamId},
         file,
       );

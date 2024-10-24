@@ -7,9 +7,12 @@ class Consts{
   static const String localHostBaseUrl = 'http://192.168.1.25:3001';
 
   //Endpoints
-  static const String getHilos = 'getYarnInventory';
-  static const String getTeams = 'getTeams';
-  static const String searchByCategory = 'filterYarnInventory?yarn_type';
+  static const String getHilos = '/api/yarn/getYarnInventory';
+  static const String getTeams = '/api/yarn/getTeams';
+  static const String searchByCategory = '/api/yarn/filterYarnInventory?yarn_type';
+  static const String printOrder = '/api/print/printOrder';
+  static const String getOrderNumber = '/api/order/getOrderNumber';
+  static const String getYarnByType = '/api/yarn/getYarnByType';
 
   //http service
   static const int timeoutSeconds = 30;

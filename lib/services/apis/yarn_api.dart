@@ -8,7 +8,7 @@ class YarnApi {
   Future<List<Hilo>> fetchYarns() async {
     try {
 
-      final data = await _httpHelper.get('/${Consts.getHilos}');
+      final data = await _httpHelper.get('${Consts.getHilos}');
         List<Hilo> hilos = (data as List).map((json) => Hilo.fromJson(json)).toList();
 
       return hilos;
