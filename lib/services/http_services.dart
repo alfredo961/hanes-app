@@ -3,7 +3,7 @@ import 'package:hilaza/utils/constants.dart';
 import 'package:http/http.dart' as http;
 
 class CustomHttp {
-  String baseUrl = Consts.localHostBaseUrl;
+  String baseUrl = Consts.emulatorBaseUrl;
 
   Future<dynamic> get(String endpoint) async {
     try {

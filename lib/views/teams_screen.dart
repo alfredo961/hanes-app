@@ -18,7 +18,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HomeViewModel>().selectTeam('');
+      context.read<HomeViewModel>().selectTeam('', 0);
     });
   }
 
@@ -72,7 +72,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
                         final team = homeViewModel.teams[index];
                         return GestureDetector(
                           onTap: () {
-                            homeViewModel.selectTeam(team.nombre ?? 'No Name');
+                            homeViewModel.selectTeam(team.nombre ?? 'No Name', team.id ?? 0);
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => const HomeScreen()),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hilaza/services/apis/yarn_api.dart';
 import '../models/team_model.dart';
 import '../models/yarn_model.dart';
+import '../services/apis/print_api.dart';
 import '../services/apis/search_by_category_api.dart';
 import '../services/apis/team_api.dart';
 class HomeViewModel extends ChangeNotifier {
@@ -14,15 +15,18 @@ class HomeViewModel extends ChangeNotifier {
   final YarnApi yarnApi = YarnApi();
   final TeamService teamService = TeamService();
   final SearchByCategoryApi searchByCategoryApi = SearchByCategoryApi();
+  final PrintService printService = PrintService();
 
   List<Team> _teams = [];
   bool _isLoadingTeams = false;
   String? _selectedTeamName;
+  int? _selectedTeamId;
   bool noResultsFound = false;
 
   List<Team> get teams => _teams;
   bool get isLoadingTeams => _isLoadingTeams;
   String? get selectedTeamName => _selectedTeamName;
+  int? get selectedTeamId => _selectedTeamId;
 
   HomeViewModel() {
     initializeData();
@@ -116,8 +120,22 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
-  void selectTeam(String teamName) {
+  void selectTeam(String teamName, int teamId) {
     _selectedTeamName = teamName;
+    _selectedTeamId = teamId;
     notifyListeners();
+  }
+
+  Future<int> sendPrintRequest(String filePath) async {
+    if (_selectedTeamId == null) {
+      throw Exception('No se ha seleccionado ningún equipo');
+    }
+
+    try {
+      return await printService.sendPrintRequest(filePath, _selectedTeamId!);
+    } catch (e) {
+      debugPrint('Error al enviar la impresión: $e');
+      rethrow;
+    }
   }
 }
