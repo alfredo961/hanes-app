@@ -200,11 +200,12 @@ Future<pw.Document> generatePdf(BuildContext context, int orderNumber) async {
             pw.Text('Número de Orden: $orderNumber', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
             pw.SizedBox(height: 20),
             pw.TableHelper.fromTextArray(
-              headers: ['TEAMS', 'DESCRIPCION', 'ITEM', 'CANTIDAD DE CONOS', 'HILO', 'DESCRIPCIÓN'],
+              headers: ['Teams', 'Descripción', 'Item', 'Cantidad de conos', 'Imagen \nHilo', 'Imagen \nDescripción'],
               data: data,
               headerStyle: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),
               headerDecoration: const pw.BoxDecoration(color: PdfColors.grey300),
               cellAlignment: pw.Alignment.center,
+              cellStyle: const pw.TextStyle(fontSize:8),
               columnWidths: {
                 0: const pw.FixedColumnWidth(50),
                 1: const pw.FixedColumnWidth(110),
